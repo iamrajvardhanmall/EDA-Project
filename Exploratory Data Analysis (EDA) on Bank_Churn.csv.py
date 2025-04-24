@@ -25,15 +25,15 @@
 
 
 import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+from plotly.subplots import make_subplots
+import ipywidgets as widgets
+from IPython.display import display, clear_output, Markdown
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 get_ipython().run_line_magic('matplotlib', 'inline')
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import ipywidgets as widgets
-from IPython.display import display, clear_output
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.tools.tools import add_constant
 from scipy.stats import ttest_ind
@@ -423,18 +423,11 @@ for col in numerical_cols:
 #     
 # v.) Distributions: Features like Age may show older customers are more likely       to churn, while Balance might indicate higher balances among churned           customers.
 
+
+
 # # DASHBOARD
 
 # In[237]:
-
-
-import pandas as pd
-import plotly.graph_objects as go
-import plotly.express as px
-from plotly.subplots import make_subplots
-import ipywidgets as widgets
-from IPython.display import display, clear_output, Markdown
-import numpy as np
 
 # --- Sample Dataset (for testing if you don't have 'data') ---
 # Comment this out if you have your own dataset
