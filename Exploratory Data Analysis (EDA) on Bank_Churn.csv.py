@@ -21,8 +21,6 @@
 # 
 # 7.) Provide Actionable Recommendations: Derive insights from the analysis to suggest targeted retention strategies for the bank.
 
-# In[213]:
-
 
 import pandas as pd
 import plotly.graph_objects as go
@@ -41,103 +39,75 @@ from scipy.stats import chi2_contingency
 from scipy.stats import norm
 
 
-# In[214]:
-
 
 data = pd.read_csv('Bank_Churn.csv')
 
 
-# In[215]:
-
 
 data
-
-
-# In[216]:
-
-
 data.head()
 
 
 # Multicollinearity Check with Variance Inflation Factor (VIF)
-
-# In[217]:
-
-
 # Encode categorical variables (optional)
 data_encoded = pd.get_dummies(data, drop_first=True)
-
 # Keep only numeric data
 numeric_data = data_encoded.select_dtypes(include=[np.number])
-
 # Drop rows with missing values
 numeric_data = numeric_data.dropna()
-
 # Add constant term
 X = add_constant(numeric_data)
-
 # Compute VIF
 vif_data = pd.DataFrame()
 vif_data["Feature"] = X.columns
 vif_data["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
-
 print(vif_data)
 
 
-# In[218]:
 
 
 data.shape
 
 
-# In[219]:
-
 
 data.info()
 
 
-# In[220]:
 
 
 data.describe(include = 'all')
 
 
-# In[221]:
+
 
 
 data.isnull().sum()
 
 
-# In[222]:
 
 
 data.Geography.nunique()
 
 
-# In[223]:
+
 
 
 data.Geography.unique()
 
 
-# In[224]:
 
 
 # Counting Number of active members
 activeMembers = data[data['IsActiveMember'] == 1].shape[0]
 print(activeMembers)
-
-
 # Since, number of active members are equal to 5151. Hence the ratio of activeMembers/non-activeMembers is 0.5151.
 
-# In[225]:
 
 
 maleCount = data[data['Gender'] == 'Male'].shape[0]
 print(maleCount)
 
 
-# In[226]:
 
 
 active_members = data[data["IsActiveMember"] == 1]
@@ -151,8 +121,6 @@ plt.xlabel("Gender")
 plt.ylabel("Number of Active Members")
 plt.tight_layout()
 plt.show()
-
-
 # Detailed explanation:
 # i.) enumerate(gender_counts.values):
 #     --> gender_counts.values contains the heights of each bar (the count values)
@@ -166,11 +134,9 @@ plt.show()
 #     --> str(value): The text to display (the bar's value converted to string)
 #     --> ha='center': Horizontal alignment is centered
 #     --> fontweight='bold': Makes the text bold
-
-
 # Since, total active members are 5151. In 5151, 2867 belongs to male gender category and the rest 2284 belongs to female.
 
-# In[227]:
+
 
 
 plt.figure(figsize=(12, 5))
@@ -181,10 +147,8 @@ plt.subplot(1, 2, 2)
 sns.histplot(data=data, x='CreditScore', hue='Exited', kde=True, element='step')
 plt.title('Credit Score Distribution')
 plt.show()
-
 # 1: The customer has exited (churned) or closed their account with the bank.
 # 0: The customer has not exited and remains an active customer of the bank.
-
 
 # Boxplot Insights (Left Plot)<br>
 # i.) The median credit scores for both churned (Exited = 1) and non-churned (Exited = 0) customers are quite similar.<br>
@@ -197,16 +161,12 @@ plt.show()
 # ii.) The churned group (Exited = 1) has a more flattened distribution, indicating fewer customers with high credit scores.<br>
 # iii.) There is a slight tendency for churned customers to have slightly lower credit scores on average, but the overlap is significant.
 
-# In[228]:
 
 
 plt.figure(figsize=(10, 6))
 sns.jointplot(x='Age', y='CreditScore', data=data, hue='Exited', kind='kde', palette={0: 'blue', 1: 'red'})
 plt.suptitle('CreditScore vs. Age by Churn Status', y=1.02)
 plt.show()
-
-
-
 # plt.figure(figsize=(10, 6)) - Creates a figure with width 10 inches and height 6 inches
 # sns.jointplot() - Creates a joint plot (combination plot) with:
 # x='Age' - Age on the x-axis
@@ -218,7 +178,6 @@ plt.show()
 # plt.suptitle() - Adds a title at the top of the plot ("CreditScore vs. Age by Churn Status")
 # y=1.02 - Adjusts the title position slightly above the plot
 # plt.show() - Displays the plot
-
 
 # Conclusion:<br>
 # i.) CreditScore Distribution:<br>
@@ -235,7 +194,7 @@ plt.show()
 # Recommendation:<br>
 # Targeted Marketing: Middle-aged customers (30–50) with moderate credit scores (600–750) form the largest segment—ideal for retention strategies.
 
-# In[229]:
+
 
 
 avg_credit_by_geo = data.groupby('Geography')['CreditScore'].mean().reset_index()
@@ -249,14 +208,12 @@ for index, row in avg_credit_by_geo.iterrows():
     plt.text(index, row['CreditScore'], f"{row['CreditScore']:.1f}", 
              ha='center', va='bottom', fontsize=12)
 plt.show()
-
-
 # Conclusion:<br>
 # i.) Germany has the highest average credit score (≈ 650), suggesting customers in Germany tend to have better creditworthiness compared to other regions.<br>
 # ii.) France follows closely (≈ 640), indicating relatively good credit profiles among French customers.<br>
 # iii.) Spain has the lowest average credit score (≈ 630), which may imply higher credit risk or different lending standards in this region.
 
-# In[230]:
+
 
 
 plt.figure(figsize=(12, 5))
@@ -267,14 +224,12 @@ plt.subplot(1, 2, 2)
 sns.countplot(x='Tenure', hue='Exited', data=data)
 plt.title('Tenure Distribution')
 plt.show()
-
-
 # Conclusion:<br>
 # i.) Tenure is not a strong predictor of churn on its own.<br>
 # ii.) Customers churn at all stages of their relationship with the bank.<br>
 # iii.) Might be more valuable when combined with other features (e.g., products, activity status).
 
-# In[231]:
+
 
 
 plt.figure(figsize=(12, 5))
@@ -285,14 +240,12 @@ plt.subplot(1, 2, 2)
 sns.histplot(data=data, x='EstimatedSalary', hue='Exited', kde=True, element='step')
 plt.title('Salary Distribution')
 plt.show()
-
-
 # ✅ Conclusion:<br>
 # i.) Estimated Salary is not a strong predictor of churn.<br>
 # ii.) Churn is independent of salary level — customers across low, medium, and high salary brackets behave similarly.<br>
 # iii.) This feature is likely not important for churn prediction on its own.
 
-# In[232]:
+
 
 
 projects_by_gender = data.groupby('Gender')['NumOfProducts'].sum().reset_index()
@@ -305,7 +258,6 @@ plt.tight_layout()
 plt.show()
 
 
-# In[233]:
 
 
 plt.figure(figsize=(10, 6))
@@ -314,7 +266,7 @@ plt.title('Churn Rate by Geography and Gender')
 plt.show()
 
 
-# In[234]:
+
 
 
 plt.figure(figsize=(10, 8))
@@ -322,8 +274,6 @@ corr = data.corr(numeric_only=True)
 sns.heatmap(corr, annot=True, fmt=".2f", cmap='coolwarm', square=True)
 plt.title('Correlation Matrix of Numerical Features')
 plt.show()
-
-
 # Conclusion:<br>
 # i.) Churn is more behavioral (activity, product use) than financial (salary, credit score).<br>
 # ii.) Age is the most influential positive correlate of churn.<br>
@@ -344,7 +294,7 @@ plt.show()
 # a. Chi-Square Test for Categorical Variables
 # To test if categorical variables (Geography, Gender, HasCrCard, IsActiveMember) are associated with churn, we'll use the Chi-Square test.
 
-# In[235]:
+
 
 
 categorical_cols = ['Geography', 'Gender', 'HasCrCard', 'IsActiveMember']
@@ -357,46 +307,35 @@ for col in categorical_cols:
         print(f"{col} is significantly associated with churn (p < 0.05).")
     else:
         print(f"No significant association between {col} and churn (p >= 0.05).")
-
-
 # Explanation: The Chi-Square test assesses whether the distribution of churn differs across categories of each variable. A p-value < 0.05 indicates a significant association.
-
 # b. Z-Test for Numerical Variables
 # To compare the means of numerical features (e.g., CreditScore, Age, Balance, EstimatedSalary) between churned and non-churned customers, we'll use an independent t-test.
 
-# In[236]:
+
 
 
 # Define numerical columns
 numerical_cols = ['CreditScore', 'Age', 'Tenure', 'Balance', 'NumOfProducts', 'EstimatedSalary']
-
 # Perform Z-test for each numerical column
 for col in numerical_cols:
     # Split data into churned and non-churned groups
     churned = data[data['Exited'] == 1][col]
     not_churned = data[data['Exited'] == 0][col]
-    
     # Calculate sample means
     mean_churned = np.mean(churned)
     mean_not_churned = np.mean(not_churned)
-    
     # Calculate sample variances
     var_churned = np.var(churned, ddof=1)
     var_not_churned = np.var(not_churned, ddof=1)
-    
     # Calculate sample sizes
     n_churned = len(churned)
     n_not_churned = len(not_churned)
-    
     # Calculate the standard error
     standard_error = np.sqrt((var_churned / n_churned) + (var_not_churned / n_not_churned))
-    
     # Calculate the Z-statistic
     z_stat = (mean_churned - mean_not_churned) / standard_error
-    
     # Calculate the two-tailed p-value
     p_val = 2 * (1 - norm.cdf(abs(z_stat)))
-    
     # Print results
     print(f"\nZ-Test for {col}:")
     print(f"Z-Statistic: {z_stat:.2f}, p-value: {p_val:.4f}")
@@ -405,9 +344,7 @@ for col in numerical_cols:
     else:
         print(f"No significant difference in {col} between churned and non-churned customers (p >= 0.05).")
 
-
 # Explanation: The t-test compares the means of each numerical feature for churned vs. non-churned groups. A p-value < 0.05 suggests the feature's mean differs significantly between groups, indicating potential predictive power.
-
 # Key Insights and Recommendations
 # Based on the analyses, here’s a summary of expected findings (pending actual results):
 # 
@@ -427,7 +364,6 @@ for col in numerical_cols:
 
 # # DASHBOARD
 
-# In[237]:
 
 # --- Sample Dataset (for testing if you don't have 'data') ---
 # Comment this out if you have your own dataset
@@ -641,7 +577,6 @@ display(filters_box, output)
 update_dashboard(None)
 
 
-# In[ ]:
 
 
 
