@@ -32,9 +32,3 @@ ii.) Matplotlib, Seaborn, Plotly (Visualization)<br>
 iii.) SciPy, StatsModels (Statistical testing)<br>
 iv.) IPython Widgets (Interactive dashboard)<br>
 
-
-Chi-square tests for categorical variables
-
-Z-tests for numerical variables
-
-Interactive dashboard with filtering capabilities
