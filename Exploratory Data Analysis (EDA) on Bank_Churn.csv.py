@@ -1,24 +1,13 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # PROBLEM STATEMENT:-
-# 
 # The goal of this project is to perform an Exploratory Data Analysis (EDA) on the "Bank_Churn.csv" dataset to understand the factors influencing customer churn in a banking context. By analyzing customer demographics, financial attributes, and behavioral patterns, the project aims to identify key predictors of churn and provide actionable insights for the bank to improve customer retention strategies.
 
 # OBJECTIVES:-
-#     
 # 1.) Understand Dataset Structure: Explore the dataset's size, features, data types, and presence of missing values to ensure data quality.
-# 
 # 2.) Analyze Customer Demographics: Examine the distribution of demographic variables (e.g., Geography, Gender, Age) and their relationship with churn.
-# 
 # 3.) Investigate Financial Attributes: Assess financial features such as Credit Score, Estimated Salary, and Balance to determine their impact on churn.
-# 
 # 4.) Evaluate Behavioral Patterns: Study customer engagement metrics like IsActiveMember, Tenure, and NumOfProducts to identify behavioral trends associated with churn.
-# 
 # 5.) Visualize Relationships: Use visualizations (e.g., boxplots, histograms, heatmaps) to uncover patterns and correlations between features and churn.
-# 
 # 6.) Create a fully working Dashboard
-# 
 # 7.) Provide Actionable Recommendations: Derive insights from the analysis to suggest targeted retention strategies for the bank.
 
 
